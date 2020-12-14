@@ -11,11 +11,6 @@ import SwiftUI
  regular pentagon
  */
 
-extension CGRect{
-    var center: CGPoint{
-        CGPoint(x: self.midX, y: self.midY)
-    }
-}
 
 struct Pentagon: Shape {
     private let isCenterAligned: Bool

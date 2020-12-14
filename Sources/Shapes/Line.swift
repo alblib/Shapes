@@ -38,33 +38,9 @@ prefix func - (_ v: CGVector) -> CGVector{
 }
 
 /**
- Creates an infinite straight line with zero width. Use stroke() to visualize it. Also, it can be used as an object to calculate intersection between two lines.
+ Creates an infinite straight line with StrokeStyle. Also, it can be used as an object to calculate intersection between two lines.
  */
 struct Line: Shape, CustomStringConvertible{
-    func path(in rect: CGRect) -> Path {
-        let pt1: CGPoint
-        let pt2: CGPoint
-        let pt1cand = (rect.maxX - point.x) / vector.dx * vector + point
-        if pt1cand.y > rect.maxY {
-            pt1 = (rect.maxY - point.y) / vector.dy * vector + point
-        }else if pt1cand.y < rect.minY{
-            pt1 = (rect.minY - point.y) / vector.dy * vector + point
-        }else{
-            pt1 = pt1cand
-        }
-        let pt2cand = (rect.minX - point.x) / vector.dx * vector + point
-        if pt2cand.y > rect.maxY {
-            pt2 = (rect.maxY - point.y) / vector.dy * vector + point
-        }else if pt2cand.y < rect.minY{
-            pt2 = (rect.minY - point.y) / vector.dy * vector + point
-        }else{
-            pt2 = pt2cand
-        }
-        return Path{path in
-            path.move(to: pt1)
-            path.addLine(to: pt2)
-        }
-    }
     
     let point : CGPoint
     let vector : CGVector
@@ -98,10 +74,52 @@ struct Line: Shape, CustomStringConvertible{
     init(point: CGPoint, vector: CGVector){
         self.point = point
         self.vector = vector
+        self.style = StrokeStyle()
+    }
+    init(point: CGPoint, vector: CGVector, style: StrokeStyle){
+        self.point = point
+        self.vector = vector
+        self.style = style
     }
     init(pt1: CGPoint, pt2: CGPoint){
         self.point = pt1
         self.vector = CGVector(dx: pt2.x - pt1.x, dy: pt2.y - pt1.y)
+        self.style = StrokeStyle()
+    }
+    init(pt1: CGPoint, pt2: CGPoint, style: StrokeStyle){
+        self.point = pt1
+        self.vector = CGVector(dx: pt2.x - pt1.x, dy: pt2.y - pt1.y)
+        self.style = style
+    }
+    
+    
+    let style: StrokeStyle
+    func path(in rect: CGRect) -> Path {
+        let pt1: CGPoint
+        let pt2: CGPoint
+        let pt1cand = (rect.maxX - point.x) / vector.dx * vector + point
+        if pt1cand.y > rect.maxY {
+            pt1 = (rect.maxY - point.y) / vector.dy * vector + point
+        }else if pt1cand.y < rect.minY{
+            pt1 = (rect.minY - point.y) / vector.dy * vector + point
+        }else{
+            pt1 = pt1cand
+        }
+        let pt2cand = (rect.minX - point.x) / vector.dx * vector + point
+        if pt2cand.y > rect.maxY {
+            pt2 = (rect.maxY - point.y) / vector.dy * vector + point
+        }else if pt2cand.y < rect.minY{
+            pt2 = (rect.minY - point.y) / vector.dy * vector + point
+        }else{
+            pt2 = pt2cand
+        }
+        return Path{path in
+            path.move(to: pt1)
+            path.addLine(to: pt2)
+        }.strokedPath(style)
+    }
+    func style(_ style: StrokeStyle) -> Self{
+        Self.init(point: self.point, vector: self.vector, style: style)
     }
 }
 
@@ -109,7 +127,7 @@ struct Line_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
             Color.white
-            Line(pt1: .init(x: 10, y: 10), pt2: .init(x: 20, y: 20)).stroke().stroke()
+            Line(pt1: .init(x: 10, y: 10), pt2: .init(x: 20, y: 20))//.stroke()//.stroke()
             Rectangle().frame(width:100, height:100)
         }
     }
