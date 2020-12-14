@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension CGRect{
+    /** Creates a rectangle with specified boundaries. */
     init(minX: CGFloat, maxX: CGFloat, minY: CGFloat, maxY: CGFloat){
         self.init(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
@@ -70,33 +71,31 @@ struct RegularPolygon: Shape {
                 CGPoint(x: sin($0), y: -cos($0))
             }
         
-        let centre : CGPoint
-        let radius : CGFloat
+        let relBounds: CGRect
         
         if circumscribedByCircle{
-            centre = rect.center
-            radius = min(rect.width, rect.height) / 2
+            relBounds = CGRect(minX: -1, maxX: 1, minY: -1, maxY: 1)
             
-        }else if isCenterAligned{
-            // make the minimal concentric external box.
-            centre = rect.center
-            let xRelRadius = relPts.map{abs($0.x)}.max() ?? 0
-            let yRelRadius = relPts.map{abs($0.y)}.max() ?? 0
-            // get fittest side between horizontal and vertical dimension.
-            radius = min(rect.width / xRelRadius, rect.height / yRelRadius) / 2
-            
-        }else{
+        }else {
             let relXs = relPts.map{$0.x}
             let relYs = relPts.map{$0.y}
+            let relXmax = relXs.max() ?? 0
+            let relXmin = relXs.min() ?? 0
+            let relYmax = relYs.max() ?? 0
+            let relYmin = relYs.min() ?? 0
             
-            let relBounds = CGRect(
-                minX: relXs.min() ?? 0, maxX: relXs.max() ?? 0,
-                minY: relYs.min() ?? 0, maxY: relYs.max() ?? 0)
-            
-            radius = min(rect.width / relBounds.width, rect.height / relBounds.height)
-            centre = CGPoint(x: min(max(rect.minX - radius * relBounds.minX, rect.midX), rect.maxX - radius * relBounds.maxX), y: min(max(rect.minY - radius * relBounds.minY, rect.midY), rect.maxY - radius * relBounds.maxY))
-            
+            if isCenterAligned{
+                let xRelRadius = max(relXmax, -relXmin)
+                let yRelRadius = max(relYmax, -relYmin)
+                relBounds = CGRect(minX: -xRelRadius, maxX: xRelRadius, minY: -yRelRadius, maxY: yRelRadius)
+            }else{
+                relBounds = CGRect(minX: relXmin, maxX: relXmax, minY: relYmin, maxY: relYmax)
+            }
         }
+        
+        let radius : CGFloat = min(rect.width / relBounds.width, rect.height / relBounds.height)
+        let centre : CGPoint = CGPoint(x: min(max(rect.minX - radius * relBounds.minX, rect.midX), rect.maxX - radius * relBounds.maxX), y: min(max(rect.minY - radius * relBounds.minY, rect.midY), rect.maxY - radius * relBounds.maxY))
+        
         // ignore zero area for error-proof.
         if !radius.isNormal{
             return Path()
