@@ -8,14 +8,35 @@
 import SwiftUI
 
 /**
- Creates a squircle, a shape between square and circle. Its equation is |x|^n+|y|^n=1 with exponent n.
+ Creates a squircle, a shape between square and circle. Its equation is |x|ⁿ+|y|ⁿ=1 with exponent n.
  */
 struct Squircle: Shape {
-    enum Exponent: Int{
+    enum Exponent: Double{
         case circle = 2
+        /**
+         Returns exponent expressing curvature of outer bounding box of macOS app icon.
+         
+         [Human Interface Guideline](https://developer.apple.com/design/human-interface-guidelines/macos/icons-and-images/app-icon/)
+         268/216
+         */
+        case appleAppOuterBoundingBox = 3.944204014882778343811377790673765375874 // -1 / log2((13 + 108 * pow(2, 0.3)) / (121 * sqrt(2)))
+        /**
+         Returns exponent expressing curvature of inner bounding box of macOS app icon.
+         
+         242/216
+         */
+        case appleAppInnerBoundingBox = 4.359227512893827563100574643675730192911 // -1 / log2((13 + 54 * pow(2, 0.3)) / (67 * sqrt(2)))
         case appleAppShape = 5
     }
+    /**
+     Returns exponent parameter to draw the squircle.
+     */
     let exponent: CGFloat
+    /**
+     Returns the number of points to render this shape.
+     
+     All the points are already in the optimal position so sharp vertex in the shape also can be rendered properly. This value set to be small enough to save computing power but large enough that the rendering result have almost no error in human eye. Quadratic Bezier curve is drawn between all rendering points.
+     */
     let renderingResolution: Int = 32
     init(_ exponentInt: Exponent){
         self.exponent = CGFloat(exponentInt.rawValue)
@@ -49,9 +70,12 @@ struct Squircle: Shape {
         return Path{ path in
             path.move(to: relToAbs(rel: list[0].point, in: rect))
             for i in 1...renderingResolution{
-                path.addQuadCurve(to: relToAbs(rel: list[i].point, in: rect), control: relToAbs(rel: list[i-1] && list[i], in: rect))
+                path.addQuadCurve(to: relToAbs(rel: list[i].point, in: rect), control: relToAbs(rel: intersection(list[i-1], list[i]), in: rect))
             }
         }
+    }
+    func concentric(ratio: CGFloat) -> Squircle?{
+        
     }
 }
 

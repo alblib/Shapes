@@ -38,7 +38,7 @@ struct RegularPolygon: Shape {
      */
     let isCenterAligned: Bool
     /**
-     Whether makes an excircle of the polygon inscribed of the frame.
+     Whether makes an excircle of the polygon inscribed in the frame.
      
      This to be true also guarantees `isCenterAligned` to be true, as guarantees the centeroid is aligned to the center of the frame.
      */
