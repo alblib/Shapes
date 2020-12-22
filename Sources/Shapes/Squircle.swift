@@ -75,7 +75,20 @@ struct Squircle: Shape {
         }
     }
     func concentric(ratio: CGFloat) -> Squircle?{
-        
+        switch self.exponent {
+        case 1:
+            return Squircle(exponent: 1)
+        case 2:
+            return Squircle(exponent: 2)
+        case 2...:
+            if ratio <= exp2(-1 / exponent) * (1 + sqrt(2)) * (sqrt(2) - exp2(1 / exponent)){
+                return nil
+            }else{
+                return Squircle(exponent: -1 / log2(exp2(-1 / exponent) - (1-ratio)/sqrt(2)))
+            }
+        default:
+            return nil
+        }
     }
 }
 
