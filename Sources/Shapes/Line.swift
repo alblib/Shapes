@@ -1,41 +1,11 @@
 //
-//  SwiftUIView.swift
+//  Line.swift
 //  
 //
 //  Created by Albertus Liberius on 2020/12/11.
 //
 
 import SwiftUI
-
-func * (_ a: CGVector, _ b: CGVector) -> CGFloat{
-    a.dx * b.dx + a.dy * b.dy
-}
-
-func / (_ v: CGVector, _ s: CGFloat) -> CGVector{
-    CGVector(dx: v.dx / s, dy: v.dy / s)
-}
-func * (_ v: CGVector, _ s: CGFloat) -> CGVector{
-    CGVector(dx: v.dx * s, dy: v.dy * s)
-}
-func * (_ s: CGFloat, _ v: CGVector) -> CGVector{
-    CGVector(dx: s * v.dx, dy: s * v.dy)
-}
-
-func + (_ p: CGPoint, _ v: CGVector) -> CGPoint{
-    CGPoint(x: p.x + v.dx, y: p.y + v.dy)
-}
-func + (_ v: CGVector, _ p: CGPoint) -> CGPoint{
-    CGPoint(x: v.dx + p.x, y: v.dy + p.y)
-}
-func - (_ p: CGPoint, _ v: CGVector) -> CGPoint{
-    CGPoint(x: p.x - v.dx, y: p.y - v.dy)
-}
-func - (_ p1: CGPoint, _ p2: CGPoint) -> CGVector{
-    CGVector(dx: p1.x - p2.x, dy: p1.y - p2.y)
-}
-prefix func - (_ v: CGVector) -> CGVector{
-    CGVector(dx: -v.dx, dy: -v.dy)
-}
 
 /**
  Creates an infinite straight line with StrokeStyle. Also, it can be used as an object to calculate intersection between two lines.

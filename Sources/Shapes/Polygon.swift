@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-extension CGRect{
-    /** Creates a rectangle with specified boundaries. */
-    init(minX: CGFloat, maxX: CGFloat, minY: CGFloat, maxY: CGFloat){
-        self.init(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
-    }
-    /**
-     The center point of the frame.
-     */
-    var center: CGPoint{
-        CGPoint(x: self.midX, y: self.midY)
-    }
-}
-
 struct RegularPolygon: Shape {
     /**
      The number of sides of the polygon.

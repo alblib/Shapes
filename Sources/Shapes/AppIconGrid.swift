@@ -52,6 +52,10 @@ struct AppIconGrid: Shape {
 
 struct AppIconGrid_Previews: PreviewProvider {
     static var previews: some View {
-        AppIconGrid(strokeStyle: .init())
+        VStack{
+            AppIconGrid(strokeStyle: .init())
+            Spacer()
+            AppIconGrid(strokeStyle: .init()).
+        }
     }
 }

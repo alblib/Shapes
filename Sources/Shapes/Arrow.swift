@@ -15,6 +15,6 @@ struct Arrow: View {
 
 struct Arrow_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftUIView()
+        Arrow()
     }
 }
