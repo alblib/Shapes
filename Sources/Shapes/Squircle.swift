@@ -104,11 +104,11 @@ struct Squircle: Shape {
     }
 }
 
-private struct Squircle_Previews: PreviewProvider {
+internal struct Squircle_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             Squircle(exponent:5)!.stroke()
-            //Squircle(exponent:1).stroke()
+            //Squircle(exponent:1)!.stroke()
         }
     }
 }
