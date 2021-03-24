@@ -21,8 +21,8 @@ struct AppIconGrid: Shape {
         if existsExternalFrame{
             let firstExp = -1 / log2((13 + 54 * pow(2, 0.3)) / (67 * sqrt(2)))
             let secondExp = -1 / log2((13 + 108 * pow(2, 0.3)) / (121 * sqrt(2)))
-            path.addPath(Squircle(exponent:CGFloat(firstExp)).path(in: CGRect(minX: rect.midX - radius * 268/216, maxX: rect.midX + radius * 268/216, minY: rect.midY - radius * 268/216, maxY: rect.midY + radius * 268/216)))
-            path.addPath(Squircle(exponent:CGFloat(secondExp)).path(in: CGRect(minX: rect.midX - radius * 242/216, maxX: rect.midX + radius * 242/216, minY: rect.midY - radius * 242/216, maxY: rect.midY + radius * 242/216)))
+            path.addPath(Squircle(exponent:CGFloat(firstExp))!.path(in: CGRect(minX: rect.midX - radius * 268/216, maxX: rect.midX + radius * 268/216, minY: rect.midY - radius * 268/216, maxY: rect.midY + radius * 268/216)))
+            path.addPath(Squircle(exponent:CGFloat(secondExp))!.path(in: CGRect(minX: rect.midX - radius * 242/216, maxX: rect.midX + radius * 242/216, minY: rect.midY - radius * 242/216, maxY: rect.midY + radius * 242/216)))
         }
         path.addPath(Squircle(.appleAppShape).path(in: CGRect(minX: rect.midX - radius, maxX: rect.midX + radius, minY: rect.midY - radius, maxY: rect.midY + radius)))
         // The Square
