@@ -16,20 +16,23 @@ struct Squircle: Shape {
         /**
          Returns exponent expressing curvature of outer bounding box of macOS app icon.
          
-         [Human Interface Guideline](https://developer.apple.com/design/human-interface-guidelines/macos/icons-and-images/app-icon/)
-         268/216
+         This shape is the shape of the "Outer bounding box" in macOS App Icon design guideline:
+         [Human Interface Guideline](https://developer.apple.com/design/human-interface-guidelines/macos/icons-and-images/app-icon/). This shape is defined as the concentric shape to the App Icon shape (exponent = 5) with size ratio 268/216. Considering the Squircle equation |x|ⁿ+|y|ⁿ=1, this value is exactly ```-1 / log2((13 + 108 * pow(2, 0.3)) / (121 * sqrt(2)))```
          */
         case appleAppOuterBoundingBox = 3.944204014882778343811377790673765375874 // -1 / log2((13 + 108 * pow(2, 0.3)) / (121 * sqrt(2)))
         /**
          Returns exponent expressing curvature of inner bounding box of macOS app icon.
          
-         242/216
+         This shape is the shape of the "Outer bounding box" in macOS App Icon design guideline:
+         [Human Interface Guideline](https://developer.apple.com/design/human-interface-guidelines/macos/icons-and-images/app-icon/). This shape is defined as the concentric shape to the App Icon shape (exponent = 5) with size ratio 242/216. Considering the Squircle equation |x|ⁿ+|y|ⁿ=1, this value is exactly ```-1 / log2((13 + 54 * pow(2, 0.3)) / (67 * sqrt(2)))```
          */
         case appleAppInnerBoundingBox = 4.359227512893827563100574643675730192911 // -1 / log2((13 + 54 * pow(2, 0.3)) / (67 * sqrt(2)))
         case appleAppShape = 5
     }
     /**
      Returns exponent parameter to draw the squircle.
+     
+     This value is not allowed to be equal or below zero to draw one continuous valid shape.
      */
     let exponent: CGFloat
     /**
@@ -41,7 +44,16 @@ struct Squircle: Shape {
     init(_ exponentInt: Exponent){
         self.exponent = CGFloat(exponentInt.rawValue)
     }
-    init(exponent: CGFloat = 5){
+    init?(_ exponentInt: Exponent?){
+        guard let exponentInt = exponentInt else{
+            return nil
+        }
+        self.exponent = CGFloat(exponentInt.rawValue)
+    }
+    init?(exponent: CGFloat = 5){
+        if exponent < CGFloat.leastNormalMagnitude{
+            return nil
+        }
         self.exponent = exponent
     }
     private func unitShape(_ theta: CGFloat) -> Line{
@@ -92,8 +104,11 @@ struct Squircle: Shape {
     }
 }
 
-struct Squircle_Previews: PreviewProvider {
+private struct Squircle_Previews: PreviewProvider {
     static var previews: some View {
-        Squircle(exponent:5).stroke()
+        VStack{
+            Squircle(exponent:5)!.stroke()
+            //Squircle(exponent:1).stroke()
+        }
     }
 }
